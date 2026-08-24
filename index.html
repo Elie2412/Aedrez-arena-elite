@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajedrez Arena Elite</title>
+  <link rel="stylesheet" href="https://cloudflare.com">
+  <link href="https://googleapis.com" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- PANTALLA DE LOGIN Y REGISTRO (Se muestra al cargar la página) -->
+  <div id="auth-container" class="auth-overlay">
+    <div class="auth-card">
+      <span class="material-icons auth-logo">emoji_events</span>
+      <h2 id="auth-title">Iniciar Sesión</h2>
+      <p id="auth-subtitle">Ingresa a tu cuenta de ChessArena</p>
+
+      <form id="auth-form" onsubmit="event.preventDefault();">
+        <!-- Campo exclusivo para Registro (Oculto por defecto en Login) -->
+        <div id="nickname-group" class="form-group hidden">
+          <label for="auth-nickname">Apodo / Nombre de jugador</label>
+          <input type="text" id="auth-nickname" placeholder="Ej: ReyDelAjedrez">
+        </div>
+
+        <div class="form-group">
+          <label for="auth-email">Correo Electrónico</label>
+          <input type="email" id="auth-email" placeholder="correo@ejemplo.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="auth-password">Contraseña</label>
+          <input type="password" id="auth-password" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" id="auth-submit-btn" class="auth-btn">Entrar a la Arena</button>
+      </form>
+
+      <div class="auth-toggle">
+        <p id="auth-toggle-text">¿No tienes una cuenta? <span id="auth-switch-link">Regístrate aquí</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERFAZ PRINCIPAL DEL JUEGO (Bloqueada visualmente hasta autenticarse) -->
+  <div id="main-app" class="app-blur">
+    <!-- BARRA SUPERIOR DE ECONOMÍA Y RANKING -->
+    <header class="top-bar">
+      <div class="logo"><span class="material-icons">emoji_events</span> ChessArena Elite</div>
+      <div class="currency-display">
+        <div class="elo-rating"><span class="material-icons" style="color: #ff9800;">military_tech</span> ELO: <span id="balance-elo">1200</span></div>
+        <div class="currency"><span class="material-icons coin-icon">monetization_on</span> <span id="balance-monedas">1000</span></div>
+        <button class="btn-store" id="open-store-btn"><span class="material-icons">shopping_bag</span> Tienda</button>
+      </div>
+    </header>
+
+    <div class="main-layout">
+      <!-- ÁREA DE JUEGO (IZQUIERDA) -->
+      <div class="game-section">
+        <div class="timer-box" id="timer-black">Negras: 05:00</div>
+        <div id="myBoard"></div>
+        <div class="timer-box active-turn" id="timer-white">Blancas: 05:00</div>
+      </div>
+
+      <!-- PANEL DE CONTROL, CHAT Y TIENDA (DERECHA) -->
+      <aside class="control-panel">
+        <!-- SELECCIÓN DE MODOS Y SALAS -->
+        <div class="panel-section" id="modes-section">
+          <h3><span class="material-icons">sports_esports</span> Elige tu Modo</h3>
+          <div class="modes-grid">
+            <button class="mode-btn active" id="mode-solo-btn">Solo vs Reloj</button>
+            <button class="mode-btn" id="mode-multi-btn">Multijugador Online</button>
+          </div>
+
+          <!-- Panel de Sala Privada -->
+          <div id="private-room-panel" class="hidden" style="margin-bottom: 15px; background: #312e2b; padding: 12px; border-radius: 4px;">
+            <h4><span class="material-icons" style="font-size: 16px;">vpn_key</span> Sala Privada</h4>
+            <input type="text" id="room-code-input" placeholder="Código de sala (Ej: 1234)" style="width: 100%; padding: 8px; margin: 8px 0; border-radius: 4px; border: none; outline: none; background: #1c1a17; color: #fff;">
+            <button id="connect-room-btn" class="buy-btn" style="background-color: #81b64c;">Conectarse a la Sala</button>
+            <p id="room-status-text" style="font-size: 12px; margin-top: 5px; color: #aaaaaa;"></p>
+          </div>
+
+          <!-- CHAT INTEGRADO, REPRODUCCIÓN Y VOZ -->
+          <div id="chat-gift-panel" class="hidden" style="background: #312e2b; padding: 12px; border-radius: 4px; display: flex; flex-direction: column; gap: 10px; height: 280px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #403e3b; padding-bottom: 5px;">
+              <h4 style="font-size: 14px; color: #fff;"><span class="material-icons" style="font-size: 16px; vertical-align: middle;">forum</span> Chat de Partida</h4>
+              <button id="send-gift-btn" style="background: #ffd700; color: #111; border: none; padding: 4px 8px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 11px; display: flex; align-items: center; gap: 2px;">
+                <span class="material-icons" style="font-size: 14px;">card_giftcard</span> Regalar 100 🪙
+              </button>
+            </div>
+            
+            <div id="chat-messages" style="flex: 1; overflow-y: auto; font-size: 13px; display: flex; flex-direction: column; gap: 6px; padding-right: 5px;"></div>
+            
+            <div style="display: flex; gap: 5px; align-items: center;">
+              <button id="voice-btn" style="background: #ea4335; border: none; color: white; width: 34px; height: 34px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Mantén presionado para hablar">
+                <span class="material-icons" id="voice-icon" style="font-size: 18px;">mic</span>
+              </button>
+              <input type="text" id="chat-input" placeholder="Escribe un mensaje o habla..." style="flex: 1; padding: 8px; border-radius: 4px; border: none; background: #1c1a17; color: #fff; outline: none; font-size: 13px;">
+              <button id="send-chat-btn" style="background: #3390ec; border: none; color: white; width: 34px; height: 34px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;"><span class="material-icons" style="font-size: 18px;">send</span></button>
+            </div>
+          </div>
+
+          <div class="game-controls" style="margin-top: 15px;">
+            <div id="status">Turno de las Blancas</div>
+            <button id="restart-btn" class="action-btn">Reiniciar Partida</button>
+          </div>
+        </div>
+
+        <!-- SECCIÓN DE LA TIENDA -->
+        <div class="panel-section hidden" id="store-section">
+          <div class="store-header">
+            <h3><span class="material-icons">storefront</span> Tienda de Aspectos</h3>
+            <button id="close-store-btn" class="close-btn">&times;</button>
+          </div>
+          <div class="store-items">
+            <div class="store-item">
+              <div class="item-preview wood-preview"></div>
+              <h4>Tablero de Madera Premium</h4>
+              <button class="buy-btn" data-cost="500" data-item="tablero-madera">Comprar (500 🪙)</button>
+            </div>
+            <div class="store-item">
+              <div class="item-preview neon-preview"></div>
+              <h4>Tablero Cyber Neon</h4>
+              <button class="buy-btn" data-cost="800" data-item="tablero-neon">Comprar (800 🪙)</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="https://jquery.com"></script>
+  <script src="https://cloudflare.com"></script>
+  <script src="https://cloudflare.com"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
