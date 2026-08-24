@@ -1,0 +1,362 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  background-color: #161512;
+  color: #bababa;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* BARRA SUPERIOR */
+.top-bar {
+  background-color: #262522;
+  padding: 10px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #111;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.currency-display {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.elo-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #ff9800;
+  font-weight: bold;
+  font-size: 16px;
+  background-color: #1c1a17;
+  padding: 4px 10px;
+  border-radius: 15px;
+}
+
+.currency {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #ffd700;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.btn-store {
+  background-color: #312e2b;
+  border: 1px solid #403e3b;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* DISTRIBUCIÓN PRINCIPAL */
+.main-layout {
+  display: flex;
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  gap: 30px;
+}
+
+.game-section {
+  flex: 1.5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 600px;
+}
+
+#myBoard {
+  width: 100%;
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+}
+
+/* RELOJES */
+.timer-box {
+  background-color: #262522;
+  color: #fff;
+  padding: 10px 15px;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: monospace;
+  margin: 10px 0;
+  border-radius: 4px;
+  text-align: right;
+}
+
+.active-turn {
+  border-left: 5px solid #81b64c;
+  background-color: #2d302a;
+}
+
+/* PANEL LATERAL */
+.control-panel {
+  flex: 1;
+  background-color: #262522;
+  border-radius: 4px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.panel-section h3 {
+  color: #fff;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modes-grid {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.mode-btn {
+  flex: 1;
+  background-color: #312e2b;
+  border: 2px solid #403e3b;
+  color: #bababa;
+  padding: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.mode-btn.active {
+  border-color: #81b64c;
+  color: #fff;
+  background-color: #3c4235;
+}
+
+.action-btn {
+  width: 100%;
+  background-color: #81b64c;
+  color: #fff;
+  border: none;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* TIENDA */
+.store-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.store-items {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.store-item {
+  background-color: #312e2b;
+  padding: 15px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.item-preview {
+  height: 80px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.wood-preview { background: linear-gradient(45deg, #8b5a2b, #cd853f); }
+.neon-preview { background: linear-gradient(45deg, #00f2fe, #4facfe); }
+
+.buy-btn {
+  margin-top: 10px;
+  background-color: #3390ec;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.hidden { display: none !important; }
+
+audio {
+  max-width: 100%;
+  height: 30px;
+  margin-top: 3px;
+}
+
+/* --- ASPECTOS DEL TABLERO --- */
+.tablero-madera .white-1e1d7 { background-color: #f0d9b5 !important; }
+.tablero-madera .black-3c85d { background-color: #b58863 !important; }
+
+.tablero-neon .white-1e1d7 { background-color: #1a1c23 !important; border: 1px solid #00f2fe; }
+.tablero-neon .black-3c85d { background-color: #0d1b2a !important; box-shadow: inset 0 0 10px rgba(0, 242, 254, 0.4); }
+/* ==========================================
+   6. PANTALLA DE LOGEO Y REGISTRO (AUTH)
+   ========================================== */
+.auth-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(22, 21, 18, 0.85); /* Fondo oscuro semitransparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Asegura que se dibuje por encima de todo */
+}
+
+.auth-card {
+  background-color: #262522;
+  border: 1px solid #403e3b;
+  padding: 35px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.auth-logo {
+  font-size: 48px !important;
+  color: #ff9800;
+  margin-bottom: 12px;
+}
+
+.auth-card h2 {
+  color: #fff;
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.auth-card p {
+  color: #bababa;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+/* Grupos de los formularios */
+.form-group {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  color: #bababa;
+  font-size: 13px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: #161512;
+  border: 1px solid #403e3b;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  border-color: #81b64c; /* Cambia a verde al hacer clic */
+}
+
+/* Botón de envío */
+.auth-btn {
+  width: 100%;
+  background-color: #81b64c;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+
+.auth-btn:hover {
+  background-color: #a3d96a;
+}
+
+/* Alternador de Login/Registro */
+.auth-toggle {
+  margin-top: 20px;
+  border-top: 1px solid #403e3b;
+  padding-top: 15px;
+}
+
+.auth-toggle p {
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+#auth-switch-link {
+  color: #3390ec;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+#auth-switch-link:hover {
+  color: #4facfe;
+}
+
+/* Efecto de bloqueo para la app en segundo plano */
+.app-blur {
+  filter: blur(4px); /* Difumina el tablero mientras no esté logeado */
+  pointer-events: none; /* Bloquea los clics en el tablero */
+  transition: filter 0.3s;
+}
+
+/* Remover el bloqueo cuando se autentique con éxito */
+.auth-success {
+  filter: none !important;
+  pointer-events: auto !important;
+}
