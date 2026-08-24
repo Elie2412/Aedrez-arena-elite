@@ -1,0 +1,18 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Tabla para almacenar las cuentas reales de los usuarios
+model Usuario {
+  id         Int    @id @default(autoincrement())
+  email      String @unique
+  password   String
+  nickname   String
+  elo        Int    @default(1200)
+  monedas    Int    @default(1000)
+}
